@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Auto Capture Photo</title>
+</head>
+<body>
+  <h2>Smile! Capturing your photo...</h2>
+  <video id="video" autoplay playsinline width="300" style="display:none;"></video>
+  <canvas id="canvas" width="300" style="border:1px solid #ccc;"></canvas>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+
+        // Wait a moment before capturing
+        setTimeout(() => {
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          stream.getTracks().forEach(track => track.stop()); // Stop the camera
+        }, 2000); // 2 seconds delay before auto-capture
+      })
+      .catch(err => {
+        alert("Camera access denied.");
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
